@@ -1,15 +1,19 @@
 const express = require("express");
 const morgan = require("morgan");
+const dotenv = require("dotenv");
 
 const bookController = require("./bookController");
 const userController = require("./userController");
 
+dotenv.config();
 const app = express();
 
 // built-in middleware
 app.use(express.json());
 
-app.use(morgan("dev"));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 app.use((req, res, next) => {
   console.log("Middleware func.");
@@ -64,7 +68,7 @@ app
   .delete(userController.deleteUser)
   .patch(userController.updateUser);
 
-const port = 4444;
+const port = process.env.PORT || 4444;
 app.listen(port, () => {
   console.log("Server running on port 4444");
 });
